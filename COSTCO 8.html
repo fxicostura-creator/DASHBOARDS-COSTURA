@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COSTCO 8"</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #161468;
+      color: #333;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: white;
+      margin-bottom: 20px;
+    }
+    .rate-config {
+      margin-bottom: 20px;
+      color: white;
+    }
+    .rate-config input {
+      padding: 5px;
+      width: 80px;
+      text-align: center;
+    }
+    .rate-config button {
+      padding: 5px 10px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    .rate-cards {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 15px 20px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+      width: 140px;
+    }
+    .label {
+      font-size: 14px;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555;
+    }
+    .value {
+      font-size: 26px;
+      color: #007acc;
+    }
+    .dashboard {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .data-columns {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      width: 320px;
+    }
+    .column {
+      background: white;
+      border-radius: 10px;
+      padding: 15px 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .column h2 {
+      color: #161468;
+      font-size: 18px;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #007acc;
+      padding-bottom: 5px;
+    }
+    .counter-card {
+      margin: 12px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 6px;
+      background-color: #f0f7ff;
+      box-shadow: inset 1px 1px 3px #d0e4ff;
+    }
+    .counter-label {
+      font-weight: bold;
+      color: #003d7a;
+      font-size: 16px;
+    }
+    .counter {
+      font-size: 20px;
+      color: #007acc;
+      font-weight: bold;
+    }
+    .chart-column {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      width: 600px;
+      max-width: 100%;
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .chart-column h2 {
+      color: #161468;
+      font-size: 18px;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #007acc;
+      padding-bottom: 5px;
+      width: 100%;
+      text-align: center;
+    }
+    canvas#graficaDetalle, canvas#grafica {
+      width: 100% !important;
+      height: 350px !important;
+    }
+  </style>
+</head>
+<body>
+  <header style="position: relative; margin-bottom: 30px;">
+    <h1 style="color: white; margin: 0; display: inline-block;">COSTCO 8"</h1>
+    <img src="https://images.squarespace-cdn.com/content/v1/620ed8b50c43390f3c3413d1/141af9c3-5706-4d16-9741-a72963d22d07/main_logo_white_s.png?format=1500w" alt="Logo Empresa" style="position: absolute; top: 0; right: 0; height: 50px;"/>
+  </header>
+
+  <div class="rate-config">
+    <label for="rateInput">Nuevo Rate:</label>
+    <input type="number" id="rateInput" value="351" min="1" />
+    <button onclick="setRate()">Actualizar</button>
+  </div>
+
+  <div class="rate-cards">
+    <div class="card"><div class="label">Rate</div><div class="value" id="rate">351</div></div>
+    <div class="card"><div class="label">Piezas Buenas</div><div class="value" id="goodCount">0</div></div>
+    <div class="card"><div class="label">Eficiencia</div><div class="value" id="efficiency">0%</div></div>
+  </div>
+
+  <div class="dashboard">
+    <div class="data-columns">
+      <div class="column" id="celda1-column">
+        <h2>CELDA 1</h2>
+        <div class="counter-card"><div class="counter-label">OP2</div><div class="counter" id="op2_1">0</div></div>
+        <div class="counter-card"><div class="counter-label">OP5</div><div class="counter" id="op5_1">0</div></div>
+        <div class="counter-card"><div class="counter-label">OP6</div><div class="counter" id="op6_1">0</div></div>
+      </div>
+      <div class="column" id="celda13-column">
+        <h2>CELDA 13</h2>
+        <div class="counter-card"><div class="counter-label">OP6</div><div class="counter" id="op6_13">0</div></div>
+      </div>
+      <div class="column" id="celda14-column">
+        <h2>CELDA 14</h2>
+        <div class="counter-card"><div class="counter-label">OP6</div><div class="counter" id="op6_14">0</div></div>
+      </div>
+    </div>
+
+    <div class="chart-column">
+      <h2>Producción Total por Celda</h2>
+      <canvas id="grafica"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-detalle-container" style="margin-top: 40px; max-width: 900px; margin-left:auto; margin-right:auto; background: white; border-radius: 10px; padding: 20px; box-shadow: 0 0 15px rgba(0,0,0,0.3);">
+    <h2>Detalle por Operación</h2>
+    <canvas id="graficaDetalle"></canvas>
+  </div>
+
+<script>
+  const url = "https://script.google.com/macros/s/AKfycbyIExuy7DwkjV4tIPPBK9Ip6JKeYfMFiMQTa49LbfX94JUyTt0L-9PDmz5DVSN0u0I1/exec";
+  let customRate = 351;
+
+  const historyLabels = [];
+  const total1 = [], total13 = [], total14 = [];
+  const op2_1_Data = [], op5_1_Data = [], op6_1_Data = [];
+  const op6_13_Data = [], op6_14_Data = [];
+
+  const chartResumen = new Chart(document.getElementById("grafica"), {
+    type: "line",
+    data: {
+      labels: historyLabels,
+      datasets: [
+        { label: "CELDA 1", data: total1, borderColor: "#007acc", fill: false },
+        { label: "CELDA 13", data: total13, borderColor: "#f39c12", fill: false },
+        { label: "CELDA 14", data: total14, borderColor: "#27ae60", fill: false }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  const chartDetalle = new Chart(document.getElementById("graficaDetalle"), {
+    type: "line",
+    data: {
+      labels: historyLabels,
+      datasets: [
+        { label: "C1 OP2", data: op2_1_Data, borderColor: "red", fill: false },
+        { label: "C1 OP5", data: op5_1_Data, borderColor: "green", fill: false },
+        { label: "C1 OP6", data: op6_1_Data, borderColor: "blue", fill: false },
+        { label: "C13 OP6", data: op6_13_Data, borderColor: "orange", fill: false },
+        { label: "C14 OP6", data: op6_14_Data, borderColor: "purple", fill: false }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  function setRate() {
+    const input = document.getElementById("rateInput");
+    customRate = parseInt(input.value) || 351;
+    document.getElementById("rate").textContent = customRate;
+  }
+
+  async function actualizarDatos() {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      // Variables totales por celda
+      let suma1 = 0, suma13 = 0, suma14 = 0;
+
+      // CELDA 1
+      ["2", "5", "6"].forEach(op => {
+        const id = `op${op}_1`;
+        const valor = parseInt(data.CELDA1[`total${op}`]?.total || 0);
+        document.getElementById(id).textContent = valor;
+        suma1 += valor;
+
+        if(op === "2") op2_1_Data.push(valor);
+        if(op === "5") op5_1_Data.push(valor);
+        if(op === "6") op6_1_Data.push(valor);
+      });
+
+      // CELDA 13 OP6
+      const val13 = parseInt(data.CELDA13.total6?.total || 0);
+      document.getElementById("op6_13").textContent = val13;
+      suma13 += val13;
+      op6_13_Data.push(val13);
+
+      // CELDA 14 OP6
+      const val14 = parseInt(data.CELDA14.total6?.total || 0);
+      document.getElementById("op6_14").textContent = val14;
+      suma14 += val14;
+      op6_14_Data.push(val14);
+
+      const totalPiezas = suma1 + suma13 + suma14;
+
+      document.getElementById("goodCount").textContent = totalPiezas;
+      document.getElementById("efficiency").textContent = ((totalPiezas / customRate) * 100).toFixed(1) + "%";
+
+      const now = new Date().toLocaleTimeString();
+      historyLabels.push(now);
+      total1.push(suma1);
+      total13.push(suma13);
+      total14.push(suma14);
+
+      if (historyLabels.length > 20) {
+        historyLabels.shift();
+        total1.shift();
+        total13.shift();
+        total14.shift();
+        op2_1_Data.shift();
+        op5_1_Data.shift();
+        op6_1_Data.shift();
+        op6_13_Data.shift();
+        op6_14_Data.shift();
+      }
+
+      chartResumen.update();
+      chartDetalle.update();
+
+    } catch (error) {
+      console.error("Error al obtener datos:", error);
+    }
+  }
+
+  setInterval(actualizarDatos, 5000);
+  actualizarDatos();
+</script>
+</body>
+</html>

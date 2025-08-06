@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>COMFORT GRANDE</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #161468;
+      color: #333;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: white;
+      margin-bottom: 20px;
+    }
+
+    .rate-config {
+      margin-bottom: 20px;
+      color: white;
+    }
+    .rate-config input {
+      padding: 5px;
+      width: 80px;
+      text-align: center;
+    }
+    .rate-config button {
+      padding: 5px 10px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    .rate-cards {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 15px 20px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+      width: 140px;
+    }
+
+    .label {
+      font-size: 14px;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .value {
+      font-size: 26px;
+      color: #007acc;
+    }
+
+    .dashboard {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .data-columns {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      width: 360px;
+    }
+
+    .column {
+      background: white;
+      border-radius: 10px;
+      padding: 15px 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .column h2 {
+      color: #161468;
+      font-size: 18px;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #007acc;
+      padding-bottom: 5px;
+    }
+
+    .counter-card {
+      margin: 12px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 6px;
+      background-color: #f0f7ff;
+      box-shadow: inset 1px 1px 3px #d0e4ff;
+    }
+
+    .counter-label {
+      font-weight: bold;
+      color: #003d7a;
+      font-size: 16px;
+    }
+
+    .counter {
+      font-size: 20px;
+      color: #007acc;
+      font-weight: bold;
+    }
+
+    .chart-column {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      width: 400px;
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .chart-column h2 {
+      color: #161468;
+      font-size: 18px;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #007acc;
+      padding-bottom: 5px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .chart-detalle-container {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      margin-top: 40px;
+      width: 90%;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    canvas#graficaDetalle, canvas#grafica {
+      width: 100% !important;
+      height: 400px !important;
+    }
+  </style>
+</head>
+<body>
+<header style="position: relative; margin-bottom: 30px;">
+    <h1 style="color: white; margin: 0; display: inline-block;">COMFORT GRANDE V-201</h1>
+    <img src="https://images.squarespace-cdn.com/content/v1/620ed8b50c43390f3c3413d1/141af9c3-5706-4d16-9741-a72963d22d07/main_logo_white_s.png?format=1500w" alt="Logo Empresa" style="position: absolute; top: 0; right: 0; height: 50px;"/>
+  </header>
+  <div class="rate-config">
+    <label for="rateInput">Nuevo Rate:</label>
+    <input type="number" id="rateInput" value="648" min="1" />
+    <button onclick="setRate()">Actualizar</button>
+  </div>
+
+  <div class="rate-cards">
+    <div class="card">
+      <div class="label">Rate</div>
+      <div class="value" id="rate">648</div>
+    </div>
+    <div class="card">
+      <div class="label">Piezas Buenas</div>
+      <div class="value" id="goodCount">0</div>
+    </div>
+    <div class="card">
+      <div class="label">Eficiencia</div>
+      <div class="value" id="efficiency">0%</div>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <div class="data-columns">
+      <div class="column" id="celda5-column">
+        <h2>CELDA 5</h2>
+        <div class="counter-card"><div class="counter-label">OP13A</div><div class="counter" id="op13a_5">0</div></div>
+        <div class="counter-card"><div class="counter-label">OP13B</div><div class="counter" id="op13b_5">0</div></div>
+        <div class="counter-card"><div class="counter-label">OP13C</div><div class="counter" id="op13c_5">0</div></div>
+      </div>
+      <div class="column" id="celda9-column">
+        <h2>CELDA 9</h2>
+        <div class="counter-card"><div class="counter-label">OP13A</div><div class="counter" id="op13a_9">0</div></div>
+        <div class="counter-card"><div class="counter-label">OP13B</div><div class="counter" id="op13b_9">0</div></div>
+        <div class="counter-card"><div class="counter-label">OP13C</div><div class="counter" id="op13c_9">0</div></div>
+      </div>
+    </div>
+
+    <div class="chart-column">
+      <h2>Producción Total: CELDA 5 vs CELDA 9</h2>
+      <canvas id="grafica"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-detalle-container">
+    <h2>Detalle por Operación</h2>
+    <canvas id="graficaDetalle"></canvas>
+  </div>
+
+  <script>
+    const url = "https://script.google.com/macros/s/AKfycbyyOXT_BwLnQgF2Gzrrmh1u6GVzWrnLOAZKqFdu3EqLuLZI9q17UHMoHnIRnfzBJYk_/exec";
+    let customRate = 648;
+    const historyLabels = [];
+    const celda5Totales = [], celda9Totales = [];
+    const op13a_5_Data = [], op13b_5_Data = [], op13c_5_Data = [];
+    const op13a_9_Data = [], op13b_9_Data = [], op13c_9_Data = [];
+
+    const chartResumen = new Chart(document.getElementById("grafica"), {
+      type: "line",
+      data: {
+        labels: historyLabels,
+        datasets: [
+          { label: "CELDA 5", data: celda5Totales, borderColor: "#007acc", fill: false },
+          { label: "CELDA 9", data: celda9Totales, borderColor: "#f39c12", fill: false }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+
+    const chartDetalle = new Chart(document.getElementById("graficaDetalle"), {
+      type: "line",
+      data: {
+        labels: historyLabels,
+        datasets: [
+          { label: "C5 OP13A", data: op13a_5_Data, borderColor: "red", fill: false },
+          { label: "C5 OP13B", data: op13b_5_Data, borderColor: "green", fill: false },
+          { label: "C5 OP13C", data: op13c_5_Data, borderColor: "blue", fill: false },
+          { label: "C9 OP13A", data: op13a_9_Data, borderColor: "orange", fill: false },
+          { label: "C9 OP13B", data: op13b_9_Data, borderColor: "purple", fill: false },
+          { label: "C9 OP13C", data: op13c_9_Data, borderColor: "brown", fill: false }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+
+    function setRate() {
+      const input = document.getElementById("rateInput");
+      customRate = parseInt(input.value) || 648;
+      document.getElementById("rate").textContent = customRate;
+    }
+
+    async function actualizarDatos() {
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        let total5 = 0, total9 = 0;
+
+        ["5", "9"].forEach(celda => {
+          ["13a", "13b", "13c"].forEach(op => {
+            const id = `op${op}_${celda}`;
+            const valor = parseInt(data[`CELDA${celda}`][`total${op}`].total) || 0;
+            document.getElementById(id).textContent = valor;
+
+            if (celda === "5") {
+              total5 += valor;
+              if (op === "13a") op13a_5_Data.push(valor);
+              if (op === "13b") op13b_5_Data.push(valor);
+              if (op === "13c") op13c_5_Data.push(valor);
+            } else {
+              total9 += valor;
+              if (op === "13a") op13a_9_Data.push(valor);
+              if (op === "13b") op13b_9_Data.push(valor);
+              if (op === "13c") op13c_9_Data.push(valor);
+            }
+          });
+        });
+
+        document.getElementById("goodCount").textContent = total5 + total9;
+        document.getElementById("efficiency").textContent = (((total5 + total9) / customRate) * 100).toFixed(1) + "%";
+
+        const now = new Date().toLocaleTimeString();
+        historyLabels.push(now);
+        celda5Totales.push(total5);
+        celda9Totales.push(total9);
+
+        if (historyLabels.length > 20) {
+          historyLabels.shift(); celda5Totales.shift(); celda9Totales.shift();
+          op13a_5_Data.shift(); op13b_5_Data.shift(); op13c_5_Data.shift();
+          op13a_9_Data.shift(); op13b_9_Data.shift(); op13c_9_Data.shift();
+        }
+
+        chartResumen.update();
+        chartDetalle.update();
+
+      } catch (error) {
+        console.error("Error al obtener datos:", error);
+      }
+    }
+
+    setInterval(actualizarDatos, 5000);
+    actualizarDatos();
+  </script>
+</body>
+</html>
