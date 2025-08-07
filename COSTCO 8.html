@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
 <head>
   <title>COSTCO 8"</title>
@@ -14,20 +14,6 @@
     h1 {
       color: white;
       margin-bottom: 20px;
-    }
-    .rate-config {
-      margin-bottom: 20px;
-      color: white;
-    }
-    .rate-config input {
-      padding: 5px;
-      width: 80px;
-      text-align: center;
-    }
-    .rate-config button {
-      padding: 5px 10px;
-      margin-left: 10px;
-      cursor: pointer;
     }
     .rate-cards {
       display: flex;
@@ -131,14 +117,8 @@
     <img src="https://images.squarespace-cdn.com/content/v1/620ed8b50c43390f3c3413d1/141af9c3-5706-4d16-9741-a72963d22d07/main_logo_white_s.png?format=1500w" alt="Logo Empresa" style="position: absolute; top: 0; right: 0; height: 50px;"/>
   </header>
 
-  <div class="rate-config">
-    <label for="rateInput">Nuevo Rate:</label>
-    <input type="number" id="rateInput" value="351" min="1" />
-    <button onclick="setRate()">Actualizar</button>
-  </div>
-
   <div class="rate-cards">
-    <div class="card"><div class="label">Rate</div><div class="value" id="rate">351</div></div>
+    <div class="card"><div class="label">Rate</div><div class="value" id="rate">468</div></div>
     <div class="card"><div class="label">Piezas Buenas</div><div class="value" id="goodCount">0</div></div>
     <div class="card"><div class="label">Eficiencia</div><div class="value" id="efficiency">0%</div></div>
   </div>
@@ -174,7 +154,7 @@
 
 <script>
   const url = "https://script.google.com/macros/s/AKfycbyIExuy7DwkjV4tIPPBK9Ip6JKeYfMFiMQTa49LbfX94JUyTt0L-9PDmz5DVSN0u0I1/exec";
-  let customRate = 351;
+  const customRate = 468;
 
   const historyLabels = [];
   const total1 = [], total13 = [], total14 = [];
@@ -217,21 +197,13 @@
     }
   });
 
-  function setRate() {
-    const input = document.getElementById("rateInput");
-    customRate = parseInt(input.value) || 351;
-    document.getElementById("rate").textContent = customRate;
-  }
-
   async function actualizarDatos() {
     try {
       const response = await fetch(url);
       const data = await response.json();
 
-      // Variables totales por celda
       let suma1 = 0, suma13 = 0, suma14 = 0;
 
-      // CELDA 1
       ["2", "5", "6"].forEach(op => {
         const id = `op${op}_1`;
         const valor = parseInt(data.CELDA1[`total${op}`]?.total || 0);
@@ -243,13 +215,11 @@
         if(op === "6") op6_1_Data.push(valor);
       });
 
-      // CELDA 13 OP6
       const val13 = parseInt(data.CELDA13.total6?.total || 0);
       document.getElementById("op6_13").textContent = val13;
       suma13 += val13;
       op6_13_Data.push(val13);
 
-      // CELDA 14 OP6
       const val14 = parseInt(data.CELDA14.total6?.total || 0);
       document.getElementById("op6_14").textContent = val14;
       suma14 += val14;
@@ -258,6 +228,7 @@
       const totalPiezas = suma1 + suma13 + suma14;
 
       document.getElementById("goodCount").textContent = totalPiezas;
+      document.getElementById("rate").textContent = customRate;
       document.getElementById("efficiency").textContent = ((totalPiezas / customRate) * 100).toFixed(1) + "%";
 
       const now = new Date().toLocaleTimeString();
