@@ -135,17 +135,17 @@
   <div class="dashboard">
     <div class="data-columns">
       <div class="column" id="celda1-column">
-        <h2>CELDA 1 <span class="rate-small">(Rate: 324 | Total: <span id="total1">0</span>)</span></h2>
+        <h2>CELDA 1 <span class="rate-small">(Total: <span id="total1">0</span>)</span></h2>
         <div class="counter-card"><div class="counter-label">OP2</div><div class="counter" id="op2_1">0</div></div>
         <div class="counter-card"><div class="counter-label">OP5</div><div class="counter" id="op5_1">0</div></div>
         <div class="counter-card"><div class="counter-label">OP6</div><div class="counter" id="op6_1">0</div></div>
       </div>
       <div class="column" id="celda13-column">
-        <h2>CELDA 13 <span class="rate-small">(Rate: 0 | Total: <span id="total13">0</span>)</span></h2>
+        <h2>CELDA 13 <span class="rate-small">(Total: <span id="total13">0</span>)</span></h2>
         <div class="counter-card"><div class="counter-label">OP6</div><div class="counter" id="op6_13">0</div></div>
       </div>
       <div class="column" id="celda14-column">
-        <h2>CELDA 14 <span class="rate-small">(Rate: 144 | Total: <span id="total14">0</span>)</span></h2>
+        <h2>CELDA 14 <span class="rate-small">(Total: <span id="total14">0</span>)</span></h2>
         <div class="counter-card"><div class="counter-label">OP6</div><div class="counter" id="op6_14">0</div></div>
       </div>
     </div>
@@ -163,10 +163,10 @@
 
 <script>
   const url = "https://script.google.com/macros/s/AKfycbyIExuy7DwkjV4tIPPBK9Ip6JKeYfMFiMQTa49LbfX94JUyTt0L-9PDmz5DVSN0u0I1/exec";
-  const rateCelda1 = 324;
-  const rateCelda13 = 0;    // Si no tienes rate para esta celda, déjalo 0
-  const rateCelda14 = 144;
-  const rateTotal = rateCelda1 + rateCelda13 + rateCelda14;
+  //const rateCelda1 = 324;
+  //const rateCelda13 = 0;    // Si no tienes rate para esta celda, déjalo 0
+  //const rateCelda14 = 144;
+  //const rateTotal = rateCelda1 + rateCelda13 + rateCelda14;
 
   const historyLabels = [];
   const total1 = [], total13 = [], total14 = [];
@@ -309,4 +309,5 @@ const chartResumen = new Chart(ctxResumen, {
 </script>
 </body>
 </html>
+
 
