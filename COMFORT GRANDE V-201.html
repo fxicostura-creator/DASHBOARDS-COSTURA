@@ -210,21 +210,45 @@
     const op13a_5_Data = [], op13b_5_Data = [], op13c_5_Data = [];
     const op13a_9_Data = [], op13b_9_Data = [], op13c_9_Data = [];
 
-    const chartResumen = new Chart(document.getElementById("grafica"), {
-      type: "line",
-      data: {
-        labels: historyLabels,
-        datasets: [
-          { label: "CELDA 5", data: celda5Totales, borderColor: "#007acc", fill: false },
-          { label: "CELDA 9", data: celda9Totales, borderColor: "#f39c12", fill: false }
-        ]
+    const ctxResumen = document.getElementById("grafica").getContext("2d");
+
+function createGradient(ctx, colorStart, colorEnd) {
+  const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+  gradient.addColorStop(0, colorStart);
+  gradient.addColorStop(1, colorEnd);
+  return gradient;
+}
+
+const chartResumen = new Chart(ctxResumen, {
+  type: "line",
+  data: {
+    labels: historyLabels,
+    datasets: [
+      {
+        label: "CELDA 5",
+        data: celda5Totales,
+        borderColor: "#007acc",
+        backgroundColor: createGradient(ctxResumen, "rgba(0,122,204,0.35)", "rgba(0,122,204,0)"),
+        fill: true,
+        tension: 0.4
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: { y: { beginAtZero: true } }
+      {
+        label: "CELDA 9",
+        data: celda9Totales,
+        borderColor: "#f39c12",
+        backgroundColor: createGradient(ctxResumen, "rgba(243,156,18,0.35)", "rgba(243,156,18,0)"),
+        fill: true,
+        tension: 0.4
       }
-    });
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: { y: { beginAtZero: true } }
+  }
+});
+
 
     const chartDetalle = new Chart(document.getElementById("graficaDetalle"), {
       type: "line",
@@ -303,4 +327,5 @@
   </script>
 </body>
 </html>
+
 
