@@ -63,6 +63,15 @@
       margin-bottom: 15px;
       border-bottom: 2px solid #007acc;
       padding-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .rate-small {
+      font-size: 14px;
+      color: #007acc;
+      font-weight: normal;
+      margin-left: 10px;
     }
     .counter-card {
       margin: 12px 0;
@@ -118,7 +127,7 @@
   </header>
 
   <div class="rate-cards">
-    <div class="card"><div class="label">Rate</div><div class="value" id="rate">468</div></div>
+    <div class="card"><div class="label">Rate Total</div><div class="value" id="rate">468</div></div>
     <div class="card"><div class="label">Piezas Buenas</div><div class="value" id="goodCount">0</div></div>
     <div class="card"><div class="label">Eficiencia</div><div class="value" id="efficiency">0%</div></div>
   </div>
@@ -126,17 +135,17 @@
   <div class="dashboard">
     <div class="data-columns">
       <div class="column" id="celda1-column">
-        <h2>CELDA 1</h2>
+        <h2>CELDA 1 <span class="rate-small">(Rate: 324 | Total: <span id="total1">0</span>)</span></h2>
         <div class="counter-card"><div class="counter-label">OP2</div><div class="counter" id="op2_1">0</div></div>
         <div class="counter-card"><div class="counter-label">OP5</div><div class="counter" id="op5_1">0</div></div>
         <div class="counter-card"><div class="counter-label">OP6</div><div class="counter" id="op6_1">0</div></div>
       </div>
       <div class="column" id="celda13-column">
-        <h2>CELDA 13</h2>
+        <h2>CELDA 13 <span class="rate-small">(Rate: 0 | Total: <span id="total13">0</span>)</span></h2>
         <div class="counter-card"><div class="counter-label">OP6</div><div class="counter" id="op6_13">0</div></div>
       </div>
       <div class="column" id="celda14-column">
-        <h2>CELDA 14</h2>
+        <h2>CELDA 14 <span class="rate-small">(Rate: 144 | Total: <span id="total14">0</span>)</span></h2>
         <div class="counter-card"><div class="counter-label">OP6</div><div class="counter" id="op6_14">0</div></div>
       </div>
     </div>
@@ -154,7 +163,10 @@
 
 <script>
   const url = "https://script.google.com/macros/s/AKfycbyIExuy7DwkjV4tIPPBK9Ip6JKeYfMFiMQTa49LbfX94JUyTt0L-9PDmz5DVSN0u0I1/exec";
-  const customRate = 468;
+  const rateCelda1 = 324;
+  const rateCelda13 = 0;    // Si no tienes rate para esta celda, déjalo 0
+  const rateCelda14 = 144;
+  const rateTotal = rateCelda1 + rateCelda13 + rateCelda14;
 
   const historyLabels = [];
   const total1 = [], total13 = [], total14 = [];
@@ -225,11 +237,15 @@
       suma14 += val14;
       op6_14_Data.push(val14);
 
+      document.getElementById("total1").textContent = suma1;
+      document.getElementById("total13").textContent = suma13;
+      document.getElementById("total14").textContent = suma14;
+
       const totalPiezas = suma1 + suma13 + suma14;
 
       document.getElementById("goodCount").textContent = totalPiezas;
-      document.getElementById("rate").textContent = customRate;
-      document.getElementById("efficiency").textContent = ((totalPiezas / customRate) * 100).toFixed(1) + "%";
+      document.getElementById("rate").textContent = rateTotal;
+      document.getElementById("efficiency").textContent = ((totalPiezas / rateTotal) * 100).toFixed(1) + "%";
 
       const now = new Date().toLocaleTimeString();
       historyLabels.push(now);
@@ -262,5 +278,3 @@
 </script>
 </body>
 </html>
-
-
