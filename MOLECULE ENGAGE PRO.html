@@ -11,34 +11,16 @@
       text-align: center;
       padding: 40px 20px;
     }
-
     h1 {
       color: white;
       margin-bottom: 30px;
     }
-
-    .rate-config {
-      margin-bottom: 30px;
-      color: white;
-    }
-    .rate-config input {
-      padding: 5px;
-      width: 80px;
-      text-align: center;
-    }
-    .rate-config button {
-      padding: 5px 10px;
-      margin-left: 10px;
-      cursor: pointer;
-    }
-
     .rate-cards {
       display: flex;
       justify-content: center;
       gap: 30px;
       margin-bottom: 40px;
     }
-
     .card {
       background-color: white;
       border-radius: 12px;
@@ -46,25 +28,21 @@
       box-shadow: 0px 6px 12px rgba(0,0,0,0.15);
       width: 160px;
     }
-
     .label {
       font-size: 14px;
       margin-bottom: 10px;
       font-weight: bold;
       color: #555;
     }
-
     .value {
       font-size: 28px;
       color: #007acc;
     }
-
     .dashboard {
       display: flex;
       justify-content: center;
       margin-bottom: 50px;
     }
-
     .data-column {
       background: white;
       border-radius: 12px;
@@ -72,7 +50,6 @@
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
       width: 320px;
     }
-
     .data-column h2 {
       color: #161468;
       font-size: 20px;
@@ -80,7 +57,6 @@
       border-bottom: 2px solid #007acc;
       padding-bottom: 6px;
     }
-
     .counter-card {
       margin: 18px 0;
       display: flex;
@@ -91,19 +67,16 @@
       background-color: #f0f7ff;
       box-shadow: inset 1px 1px 4px #d0e4ff;
     }
-
     .counter-label {
       font-weight: bold;
       color: #003d7a;
       font-size: 16px;
     }
-
     .counter {
       font-size: 22px;
       color: #007acc;
       font-weight: bold;
     }
-
     .chart-detalle-container {
       background: white;
       border-radius: 12px;
@@ -115,7 +88,6 @@
       margin-left: auto;
       margin-right: auto;
     }
-
     canvas {
       width: 100% !important;
       height: 100% !important;
@@ -127,12 +99,6 @@
     <h1 style="color: white; margin: 0; display: inline-block;">MOLECULE ENGAGE PRO</h1>
     <img src="https://images.squarespace-cdn.com/content/v1/620ed8b50c43390f3c3413d1/141af9c3-5706-4d16-9741-a72963d22d07/main_logo_white_s.png?format=1500w" alt="Logo Empresa" style="position: absolute; top: 0; right: 0; height: 80px;"/>
   </header>
-
-  <div class="rate-config">
-    <label for="rateInput">Nuevo Rate:</label>
-    <input type="number" id="rateInput" value="90" min="1" />
-    <button onclick="setRate()">Actualizar</button>
-  </div>
 
   <div class="rate-cards">
     <div class="card"><div class="label">Rate</div><div class="value" id="rate">90</div></div>
@@ -155,7 +121,7 @@
 
 <script>
   const url = "https://script.google.com/macros/s/AKfycbw7kyW8WU_KL2Uzhg3L2_AfAukbaJ2xXe7okZhg_tDNa_56aDzlE53LdVIkk_uFISs2Cg/exec";
-  let customRate = 90;
+  const customRate = 90; // rate fijo
 
   const historyLabels = [];
   const op13a_8_Data = [], op13b_8_Data = [];
@@ -192,11 +158,6 @@
   }
 });
 
-  function setRate() {
-    const input = document.getElementById("rateInput");
-    customRate = parseInt(input.value) || 90;
-    document.getElementById("rate").textContent = customRate;
-  }
 
   async function actualizarDatos() {
     try {
@@ -235,5 +196,3 @@
 </script>
 </body>
 </html>
-
-
