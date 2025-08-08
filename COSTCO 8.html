@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>  
 <html>
 <head>
   <title>COSTCO 8"</title>
@@ -84,6 +84,21 @@
       color: #007acc;
       font-weight: bold;
     }
+    /* Estilo para el total de celda 1 */
+    #total_celda1 {
+      color: white !important;
+    }
+    #celda1-column .counter-card.total {
+      background-color: #007acc;
+      box-shadow: none;
+      margin-top: 10px;
+    }
+    #celda1-column .counter-card.total .counter-label {
+      color: white;
+    }
+    #celda1-column .counter-card.total .counter {
+      color: white;
+    }
     .chart-column {
       background: white;
       border-radius: 10px;
@@ -130,6 +145,10 @@
         <div class="counter-card"><div class="counter-label">OP2</div><div class="counter" id="op2_1">0</div></div>
         <div class="counter-card"><div class="counter-label">OP5</div><div class="counter" id="op5_1">0</div></div>
         <div class="counter-card"><div class="counter-label">OP6</div><div class="counter" id="op6_1">0</div></div>
+        <div class="counter-card total">
+          <div class="counter-label">TOTAL</div>
+          <div class="counter" id="total_celda1">0</div>
+        </div>
       </div>
       <div class="column" id="celda13-column">
         <h2>CELDA 13</h2>
@@ -166,15 +185,21 @@
     data: {
       labels: historyLabels,
       datasets: [
-        { label: "CELDA 1", data: total1, borderColor: "#007acc", fill: false },
-        { label: "CELDA 13", data: total13, borderColor: "#f39c12", fill: false },
-        { label: "CELDA 14", data: total14, borderColor: "#27ae60", fill: false }
+        { label: "CELDA 1", data: total1, borderColor: "#007acc", backgroundColor: "rgba(0,122,204,0.2)", tension: 0.3, borderWidth: 2, fill: true, pointRadius: 3 },
+        { label: "CELDA 13", data: total13, borderColor: "#f39c12", backgroundColor: "rgba(243,156,18,0.2)", tension: 0.3, borderWidth: 2, fill: true, pointRadius: 3 },
+        { label: "CELDA 14", data: total14, borderColor: "#27ae60", backgroundColor: "rgba(39,174,96,0.2)", tension: 0.3, borderWidth: 2, fill: true, pointRadius: 3 }
       ]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      scales: { y: { beginAtZero: true } }
+      plugins: {
+        legend: { labels: { color: "#003d7a", font: { weight: "bold" } } }
+      },
+      scales: {
+        x: { ticks: { color: "#003d7a" } },
+        y: { beginAtZero: true, ticks: { color: "#003d7a" } }
+      }
     }
   });
 
@@ -214,6 +239,9 @@
         if(op === "5") op5_1_Data.push(valor);
         if(op === "6") op6_1_Data.push(valor);
       });
+
+      // Actualiza total de CELDA 1
+      document.getElementById("total_celda1").textContent = suma1;
 
       const val13 = parseInt(data.CELDA13.total6?.total || 0);
       document.getElementById("op6_13").textContent = val13;
@@ -262,4 +290,3 @@
 </script>
 </body>
 </html>
-
