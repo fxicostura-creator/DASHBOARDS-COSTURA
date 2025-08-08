@@ -173,22 +173,53 @@
   const op2_1_Data = [], op5_1_Data = [], op6_1_Data = [];
   const op6_13_Data = [], op6_14_Data = [];
 
-  const chartResumen = new Chart(document.getElementById("grafica"), {
-    type: "line",
-    data: {
-      labels: historyLabels,
-      datasets: [
-        { label: "CELDA 1", data: total1, borderColor: "#007acc", fill: false },
-        { label: "CELDA 13", data: total13, borderColor: "#f39c12", fill: false },
-        { label: "CELDA 14", data: total14, borderColor: "#27ae60", fill: false }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: { y: { beginAtZero: true } }
-    }
-  });
+  const ctxResumen = document.getElementById("grafica").getContext("2d");
+
+function createGradient(ctx, colorStart, colorEnd) {
+  const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+  gradient.addColorStop(0, colorStart);
+  gradient.addColorStop(1, colorEnd);
+  return gradient;
+}
+
+const chartResumen = new Chart(ctxResumen, {
+  type: "line",
+  data: {
+    labels: historyLabels,
+    datasets: [
+      {
+        label: "CELDA 1",
+        data: total1,
+        borderColor: "#007acc",
+        backgroundColor: createGradient(ctxResumen, "rgba(0,122,204,0.35)", "rgba(0,122,204,0)"),
+        fill: true,
+        tension: 0.4
+      },
+      {
+        label: "CELDA 13",
+        data: total13,
+        borderColor: "#f39c12",
+        backgroundColor: createGradient(ctxResumen, "rgba(243,156,18,0.35)", "rgba(243,156,18,0)"),
+        fill: true,
+        tension: 0.4
+      },
+      {
+        label: "CELDA 14",
+        data: total14,
+        borderColor: "#27ae60",
+        backgroundColor: createGradient(ctxResumen, "rgba(39,174,96,0.35)", "rgba(39,174,96,0)"),
+        fill: true,
+        tension: 0.4
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: { y: { beginAtZero: true } }
+  }
+});
+
 
   const chartDetalle = new Chart(document.getElementById("graficaDetalle"), {
     type: "line",
@@ -278,3 +309,4 @@
 </script>
 </body>
 </html>
+
