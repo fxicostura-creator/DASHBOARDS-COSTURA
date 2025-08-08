@@ -161,22 +161,36 @@
   const op13a_8_Data = [], op13b_8_Data = [];
 
   const detalleChart = new Chart(document.getElementById("graficaDetalle"), {
-    type: "line",
-    data: {
-      labels: historyLabels,
-      datasets: [
-        { label: "OP13A", data: op13a_8_Data, borderColor: "blue", fill: false },
-        { label: "OP13B", data: op13b_8_Data, borderColor: "green", fill: false }
-      ]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: { beginAtZero: true },
-        x: { ticks: { maxTicksLimit: 15 } }
+  type: "line",
+  data: {
+    labels: historyLabels,
+    datasets: [
+      {
+        label: "OP13A",
+        data: op13a_8_Data,
+        borderColor: "blue",
+        backgroundColor: "rgba(0, 0, 255, 0.2)",
+        fill: true,
+        tension: 0.4
+      },
+      {
+        label: "OP13B",
+        data: op13b_8_Data,
+        borderColor: "green",
+        backgroundColor: "rgba(0, 128, 0, 0.2)",
+        fill: true,
+        tension: 0.4
       }
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: { beginAtZero: true },
+      x: { ticks: { maxTicksLimit: 15 } }
     }
-  });
+  }
+});
 
   function setRate() {
     const input = document.getElementById("rateInput");
@@ -221,4 +235,5 @@
 </script>
 </body>
 </html>
+
 
