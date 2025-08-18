@@ -109,80 +109,70 @@
   <div class="dashboard">
     <div class="data-column" id="celda8-column">
       <h2>CELDA 8</h2>
-      <div class="counter-card"><div class="counter-label">OP13A</div><div class="counter" id="op13a_8">0</div></div>
-      <div class="counter-card"><div class="counter-label">OP13B</div><div class="counter" id="op13b_8">0</div></div>
+      <div class="counter-card">
+        <div class="counter-label">OP13A</div>
+        <div class="counter" id="op13a_8">0</div>
+      </div>
     </div>
   </div>
 
   <div class="chart-detalle-container">
-    <h2>Producción CELDA 8: OP13A vs OP13B</h2>
+    <h2>Producción CELDA 8: OP13A</h2>
     <canvas id="graficaDetalle"></canvas>
   </div>
 
 <script>
-  const url = "https://script.google.com/macros/s/AKfycbw7kyW8WU_KL2Uzhg3L2_AfAukbaJ2xXe7okZhg_tDNa_56aDzlE53LdVIkk_uFISs2Cg/exec";
-  const customRate = 90; // rate fijo
+  const url = "https://script.google.com/macros/s/AKfycbwwFCtFayqkCKe2_P5Qxa9py_xA5pn2ifF2FRKMD_SP3CN6s6oDv0t2lwdTa_AgCMQanQ/exec";
+  const customRate = 90;
 
   const historyLabels = [];
-  const op13a_8_Data = [], op13b_8_Data = [];
+  const op13a_8_Data = [];
 
   const detalleChart = new Chart(document.getElementById("graficaDetalle"), {
-  type: "line",
-  data: {
-    labels: historyLabels,
-    datasets: [
-      {
-        label: "OP13A",
-        data: op13a_8_Data,
-        borderColor: "blue",
-        backgroundColor: "rgba(0, 0, 255, 0.2)",
-        fill: true,
-        tension: 0.4
-      },
-      {
-        label: "OP13B",
-        data: op13b_8_Data,
-        borderColor: "green",
-        backgroundColor: "rgba(0, 128, 0, 0.2)",
-        fill: true,
-        tension: 0.4
+    type: "line",
+    data: {
+      labels: historyLabels,
+      datasets: [
+        {
+          label: "OP13A",
+          data: op13a_8_Data,
+          borderColor: "blue",
+          backgroundColor: "rgba(0, 0, 255, 0.2)",
+          fill: true,
+          tension: 0.4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true },
+        x: { ticks: { maxTicksLimit: 15 } }
       }
-    ]
-  },
-  options: {
-    responsive: true,
-    scales: {
-      y: { beginAtZero: true },
-      x: { ticks: { maxTicksLimit: 15 } }
     }
-  }
-});
-
+  });
 
   async function actualizarDatos() {
     try {
       const response = await fetch(url);
       const data = await response.json();
 
-      const valor13a = parseInt(data["CELDA8"]?.total13a?.total || 0);
-      const valor13b = parseInt(data["CELDA8"]?.total13b?.total || 0);
+      // Extraemos los datos según tu JSON actual { total, fecha, tiempo }
+      const valor13a = parseInt(data.total || 0);
 
       document.getElementById("op13a_8").textContent = valor13a;
-      document.getElementById("op13b_8").textContent = valor13b;
 
-      const total = valor13a + valor13b;
+      const total = valor13a;
       document.getElementById("goodCount").textContent = total;
       document.getElementById("efficiency").textContent = ((total / customRate) * 100).toFixed(1) + "%";
 
       const now = new Date().toLocaleTimeString();
       historyLabels.push(now);
       op13a_8_Data.push(valor13a);
-      op13b_8_Data.push(valor13b);
 
       if (historyLabels.length > 20) {
         historyLabels.shift();
         op13a_8_Data.shift();
-        op13b_8_Data.shift();
       }
 
       detalleChart.update();
