@@ -39,7 +39,6 @@
     justify-content: space-between;
     align-items: center;
     transition: background-color 0.3s;
-    position: relative;
   }
   .caja:hover {
     background-color: rgb(39, 80, 122);
@@ -51,23 +50,6 @@
   .total {
     font-size: 28px;
     margin-top: 5px;
-  }
-
-  /* Animación de carga en cajas individuales */
-  .caja.loading::after {
-    content: '';
-    position: absolute;
-    bottom: 25px;
-    width: 60px;
-    height: 6px;
-    background: #fff;
-    border-radius: 3px;
-    animation: loadingAnim 1s linear infinite;
-  }
-  @keyframes loadingAnim {
-    0% { transform: translateX(-50px); opacity: 0; }
-    50% { transform: translateX(0); opacity: 1; }
-    100% { transform: translateX(50px); opacity: 0; }
   }
 
   /* Animación de carga general antes de mostrar las cajas */
@@ -159,9 +141,9 @@
 
     for (const [linea, total] of Object.entries(totales)) {
       const caja = document.createElement("div");
-      caja.className = "caja loading";
+      caja.className = "caja";
       caja.innerHTML = `<div class="nombre-linea">${linea}</div>
-                        <div class="total">...</div>`;
+                        <div class="total">${total}</div>`;
 
       caja.addEventListener("click", () => {
         let urlDashboard = "";
@@ -172,12 +154,6 @@
       });
 
       container.appendChild(caja);
-
-      // Mostrar total después de pequeña animación
-      setTimeout(() => {
-        caja.querySelector(".total").textContent = total;
-        caja.classList.remove("loading");
-      }, 500);
     }
   }
 
