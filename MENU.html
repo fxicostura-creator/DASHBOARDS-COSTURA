@@ -1,117 +1,134 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>FXI CORTE Y COSTURA - Resumen</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #0e1a2b;
-      color: #fff;
-      text-align: center;
-      padding: 60px 20px;
-    }
-    h1 {
-      font-size: 36px;
-      margin-bottom: 40px;
-    }
-    .dashboard-container {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      flex-wrap: wrap;
-    }
-    .line-box {
-      background-color: rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 40px 30px;
-      width: 220px;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-    }
-    .line-box:hover {
-      background-color: rgba(255,255,255,0.2);
-      transform: translateY(-5px);
-    }
-    .line-name {
-      font-size: 22px;
-      margin-bottom: 15px;
-    }
-    .line-total {
-      font-size: 32px;
-      font-weight: bold;
-      color: #1e90ff;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>FXI CORTE Y COSTURA - Totales</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #0e1a2b;
+    color: #fff;
+    text-align: center;
+    padding-top: 60px;
+  }
+  h1 {
+    font-size: 36px;
+    margin-bottom: 40px;
+  }
+  .totales-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+  }
+  .caja {
+    background-color: rgba(30, 144, 255, 0.7);
+    color: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    font-size: 24px;
+    cursor: pointer;
+    min-width: 200px;
+    transition: background-color 0.3s;
+  }
+  .caja:hover {
+    background-color: rgba(30, 144, 255, 1);
+  }
+  .nombre-linea {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  .total {
+    font-size: 28px;
+    margin-top: 5px;
+  }
+</style>
 </head>
 <body>
-  <h1>FXI CORTE Y COSTURA</h1>
 
-  <div class="dashboard-container">
-    <div class="line-box" id="engage-box" onclick="window.open('MOLECULE ENGAGE PRO.html','_blank')">
-      <div class="line-name">MOLECULE ENGAGE PRO</div>
-      <div class="line-total" id="total-engage">0</div>
-    </div>
+<h1>FXI CORTE Y COSTURA</h1>
 
-    <div class="line-box" id="comfort-box" onclick="window.open('COMFORT GRANDE V-201.html','_blank')">
-      <div class="line-name">COMFORT GRANDE</div>
-      <div class="line-total" id="total-comfort">0</div>
-    </div>
+<div class="totales-container" id="totalesContainer">
+  <!-- Las cajas se crearán dinámicamente cuando lleguen los datos -->
+</div>
 
-    <div class="line-box" id="costco-box" onclick="window.open('COSTCO 8.html','_blank')">
-      <div class="line-name">COSTCO 8"</div>
-      <div class="line-total" id="total-costco">0</div>
-    </div>
-  </div>
+<script>
+  // URLs de tus Apps Script
+  const urls = {
+    engage: "https://script.google.com/macros/s/AKfycbwwFCtFayqkCKe2_P5Qxa9py_xA5pn2ifF2FRKMD_SP3CN6s6oDv0t2lwdTa_AgCMQanQ/exec",
+    comfort: "https://script.google.com/macros/s/AKfycbwY5pS2dXJ90vdyDfRxf8k1HZ_u8m9kYt0mBpRVfllo6PnkzPPRGIPXvGDrIhI57S4a/exec",
+    costco: "https://script.google.com/macros/s/AKfycbyk2nozKZmI05nnCpQjhJ46i1I0EQNXqQPS85tKMhvUXfS3Ef1xDUqcOxMoScoVtslB/exec"
+  };
 
-  <script>
-    // URLs de Apps Script para cada línea
-    const urls = {
-      engage: "https://script.google.com/macros/s/AKfycbwwFCtFayqkCKe2_P5Qxa9py_xA5pn2ifF2FRKMD_SP3CN6s6oDv0t2lwdTa_AgCMQanQ/exec",
-      comfort: "https://script.google.com/macros/s/AKfycbwY5pS2dXJ90vdyDfRxf8k1HZ_u8m9kYt0mBpRVfllo6PnkzPPRGIPXvGDrIhI57S4a/exec",
-      costco: "https://script.google.com/macros/s/AKfycbyk2nozKZmI05nnCpQjhJ46i1I0EQNXqQPS85tKMhvUXfS3Ef1xDUqcOxMoScoVtslB/exec"
-    };
+  async function obtenerTotales() {
+    try {
+      const [resEngage, resComfort, resCostco] = await Promise.all([
+        fetch(urls.engage).then(r => r.json()),
+        fetch(urls.comfort).then(r => r.json()),
+        fetch(urls.costco).then(r => r.json())
+      ]);
 
-    async function actualizarTotales() {
-      try {
-        // Engage
-        const resEngage = await fetch(urls.engage);
-        const dataEngage = await resEngage.json();
-        const totalEngage = parseInt(dataEngage.total || dataEngage.total13a || 0);
-        document.getElementById("total-engage").textContent = totalEngage;
+      // Calcular totales según tu lógica
+      const totalEngage = parseInt(resEngage.total || 0);
+      const totalComfort = parseInt(resComfort.celda5.op13a.total || 0)
+                          + parseInt(resComfort.celda5.op13b.total || 0)
+                          + parseInt(resComfort.celda5.op13c.total || 0)
+                          + parseInt(resComfort.celda9.op13a.total || 0)
+                          + parseInt(resComfort.celda9.op13b.total || 0)
+                          + parseInt(resComfort.celda9.op13c.total || 0);
 
-        // Comfort Grande
-        const resComfort = await fetch(urls.comfort);
-        const dataComfort = await resComfort.json();
-        const totalComfort = (
-          (parseInt(dataComfort.celda5.op13a.total) || 0) +
-          (parseInt(dataComfort.celda5.op13b.total) || 0) +
-          (parseInt(dataComfort.celda5.op13c.total) || 0) +
-          (parseInt(dataComfort.celda9.op13a.total) || 0) +
-          (parseInt(dataComfort.celda9.op13b.total) || 0) +
-          (parseInt(dataComfort.celda9.op13c.total) || 0)
-        );
-        document.getElementById("total-comfort").textContent = totalComfort;
+      const totalCostco = parseInt(resCostco.CELDA1.total6.total || 0)
+                        + parseInt(resCostco.CELDA2.total6.total || 0)
+                        + parseInt(resCostco.CELDA13.total6.total || 0)
+                        + parseInt(resCostco.CELDA14.total6.total || 0);
 
-        // Costco
-        const resCostco = await fetch(urls.costco);
-        const dataCostco = await resCostco.json();
-        const totalCostco = (
-          (parseInt(dataCostco.CELDA1.total6.total) || 0) +
-          (parseInt(dataCostco.CELDA2.total6.total) || 0) +
-          (parseInt(dataCostco.CELDA13.total6.total) || 0) +
-          (parseInt(dataCostco.CELDA14.total6.total) || 0)
-        );
-        document.getElementById("total-costco").textContent = totalCostco;
-
-      } catch (e) {
-        console.error("Error actualizando totales:", e);
-      }
+      return {
+        "MOLECULE ENGAGE PRO": totalEngage,
+        "COMFORT GRANDE": totalComfort,
+        "COSTCO 8\"": totalCostco
+      };
+    } catch (error) {
+      console.error("Error al obtener los datos:", error);
+      return {};
     }
+  }
 
-    // Actualiza cada 5 segundos
-    setInterval(actualizarTotales, 5000);
-    actualizarTotales();
-  </script>
+  function renderizarCajas(totales) {
+    const container = document.getElementById("totalesContainer");
+    container.innerHTML = ""; // Limpiar antes
+
+    for (const [linea, total] of Object.entries(totales)) {
+      const caja = document.createElement("div");
+      caja.className = "caja";
+      caja.innerHTML = `<div class="nombre-linea">${linea}</div>
+                        <div class="total">${total}</div>`;
+      
+      // Redirigir al dashboard de la línea
+      caja.addEventListener("click", () => {
+        let urlDashboard = "";
+        if(linea === "MOLECULE ENGAGE PRO") urlDashboard = "MOLECULE ENGAGE PRO.html";
+        if(linea === "COMFORT GRANDE") urlDashboard = "COMFORT GRANDE V-201.html";
+        if(linea === "COSTCO 8\"") urlDashboard = "COSTCO 8.html";
+        window.open(urlDashboard, "_blank");
+      });
+
+      container.appendChild(caja);
+    }
+  }
+
+  // Inicial
+  async function init() {
+    const totales = await obtenerTotales();
+    renderizarCajas(totales);
+
+    // Actualizar cada 5 segundos
+    setInterval(async () => {
+      const nuevosTotales = await obtenerTotales();
+      renderizarCajas(nuevosTotales);
+    }, 5000);
+  }
+
+  init();
+</script>
+
 </body>
 </html>
