@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>FXI CORTE Y COSTURA - Resumen</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0e1a2b;
+      color: #fff;
+      text-align: center;
+      padding: 60px 20px;
+    }
+    h1 {
+      font-size: 36px;
+      margin-bottom: 40px;
+    }
+    .dashboard-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .line-box {
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 40px 30px;
+      width: 220px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    .line-box:hover {
+      background-color: rgba(255,255,255,0.2);
+      transform: translateY(-5px);
+    }
+    .line-name {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+    .line-total {
+      font-size: 32px;
+      font-weight: bold;
+      color: #1e90ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>FXI CORTE Y COSTURA</h1>
+
+  <div class="dashboard-container">
+    <div class="line-box" id="engage-box" onclick="window.open('MOLECULE ENGAGE PRO.html','_blank')">
+      <div class="line-name">MOLECULE ENGAGE PRO</div>
+      <div class="line-total" id="total-engage">0</div>
+    </div>
+
+    <div class="line-box" id="comfort-box" onclick="window.open('COMFORT GRANDE V-201.html','_blank')">
+      <div class="line-name">COMFORT GRANDE</div>
+      <div class="line-total" id="total-comfort">0</div>
+    </div>
+
+    <div class="line-box" id="costco-box" onclick="window.open('COSTCO 8.html','_blank')">
+      <div class="line-name">COSTCO 8"</div>
+      <div class="line-total" id="total-costco">0</div>
+    </div>
+  </div>
+
+  <script>
+    // URLs de Apps Script para cada línea
+    const urls = {
+      engage: "https://script.google.com/macros/s/AKfycbwwFCtFayqkCKe2_P5Qxa9py_xA5pn2ifF2FRKMD_SP3CN6s6oDv0t2lwdTa_AgCMQanQ/exec",
+      comfort: "https://script.google.com/macros/s/AKfycbwY5pS2dXJ90vdyDfRxf8k1HZ_u8m9kYt0mBpRVfllo6PnkzPPRGIPXvGDrIhI57S4a/exec",
+      costco: "https://script.google.com/macros/s/AKfycbyk2nozKZmI05nnCpQjhJ46i1I0EQNXqQPS85tKMhvUXfS3Ef1xDUqcOxMoScoVtslB/exec"
+    };
+
+    async function actualizarTotales() {
+      try {
+        // Engage
+        const resEngage = await fetch(urls.engage);
+        const dataEngage = await resEngage.json();
+        const totalEngage = parseInt(dataEngage.total || dataEngage.total13a || 0);
+        document.getElementById("total-engage").textContent = totalEngage;
+
+        // Comfort Grande
+        const resComfort = await fetch(urls.comfort);
+        const dataComfort = await resComfort.json();
+        const totalComfort = (
+          (parseInt(dataComfort.celda5.op13a.total) || 0) +
+          (parseInt(dataComfort.celda5.op13b.total) || 0) +
+          (parseInt(dataComfort.celda5.op13c.total) || 0) +
+          (parseInt(dataComfort.celda9.op13a.total) || 0) +
+          (parseInt(dataComfort.celda9.op13b.total) || 0) +
+          (parseInt(dataComfort.celda9.op13c.total) || 0)
+        );
+        document.getElementById("total-comfort").textContent = totalComfort;
+
+        // Costco
+        const resCostco = await fetch(urls.costco);
+        const dataCostco = await resCostco.json();
+        const totalCostco = (
+          (parseInt(dataCostco.CELDA1.total6.total) || 0) +
+          (parseInt(dataCostco.CELDA2.total6.total) || 0) +
+          (parseInt(dataCostco.CELDA13.total6.total) || 0) +
+          (parseInt(dataCostco.CELDA14.total6.total) || 0)
+        );
+        document.getElementById("total-costco").textContent = totalCostco;
+
+      } catch (e) {
+        console.error("Error actualizando totales:", e);
+      }
+    }
+
+    // Actualiza cada 5 segundos
+    setInterval(actualizarTotales, 5000);
+    actualizarTotales();
+  </script>
+</body>
+</html>
