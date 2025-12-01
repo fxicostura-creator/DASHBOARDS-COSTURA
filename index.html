@@ -1,181 +1,217 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>FXI CORTE Y COSTURA - Totales</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #0e1a2b;
-    color: #fff;
-    text-align: center;
-    padding-top: 60px;
-  }
-  h1 {
-    font-size: 36px;
-    margin-bottom: 40px;
-  }
+    <title>COMFORT GRAND</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* 🎨 Estilos Generales y Modo Claro Profesional */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F8F9FA; /* Fondo blanco muy suave */
+            color: #343A40; /* Texto oscuro */
+            text-align: center;
+            padding: 25px;
+        }
+        h1 {
+            color: #22698d; /* Azul brillante como color principal */
+            margin-bottom: 25px;
+            font-size: 2.2em;
+            letter-spacing: 0.5px;
+        }
 
-  /* Contenedor de totales */
-  .totales-container {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    opacity: 0; /* oculto al inicio */
-    transition: opacity 0.5s;
-  }
+        /* 📊 Contenedor Principal de Métricas */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columnas iguales */
+            gap: 20px;
+            max-width: 900px;
+            margin: 0px auto 20px auto;
+        }
+        .metric-card {
+            background-color: #FFFFFF; /* Fondo de tarjeta blanco puro */
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.1); /* Sombra muy suave */
+            border-top: 3px solid #17A2B8; /* Borde superior de acento (cian suave) */
+        }
+        .label {
+            font-size: 15px;
+            font-weight: 500;
+            color: #6C757D; /* Gris medio para las etiquetas */
+            margin-bottom: 5px;
+        }
+        .value {
+            font-size: 32px;
+            color: #17A2B8; /* Color de acento cian suave */
+            font-weight: bold;
+        }
 
-  .caja {
-    background-color: rgba(133, 180, 227, 0.7);
-    color: #fff;
-    width: 250px;
-    height: 150px;
-    padding: 20px;
-    border-radius: 12px;
-    font-size: 24px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.3s;
-  }
-  .caja:hover {
-    background-color: rgb(39, 80, 122);
-  }
-  .nombre-linea {
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  .total {
-    font-size: 28px;
-    margin-top: 5px;
-  }
+        /* 🔥 Barra de Progreso (Big Progress Bar) */
+        .progress-container {
+            margin: 40px auto 10px auto;
+            width: 90%;
+            height: 38px;
+            background-color: #E9ECEF; /* Fondo gris claro de la barra */
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            /* El color inicial lo maneja el JS, aquí solo la transición */
+            transition: width 0.6s ease-in-out, background-color 0.3s ease;
+            border-radius: 20px;
+        }
+        .progress-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 5px;
+            color: #343A40; /* Texto oscuro para el modo claro */
+        }
 
-  /* Animación de carga general antes de mostrar las cajas */
-  .loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #0e1a2b;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    flex-direction: column;
-    color: #fff;
-  }
-  .spinner {
-    border: 8px solid rgba(255,255,255,0.2);
-    border-top: 8px solid #fff;
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 15px;
-  }
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-
-</style>
+        /* 🔹 Contenedor de Detalle (Totales por Operación) */
+        .detail-container {
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 40px auto 20px auto;
+            border: 1px solid #DEE2E6; /* Borde muy sutil */
+        }
+        .detail-container h2 {
+            color: #16849d;
+            font-size: 20px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #17A2B8;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .counter-card {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            border-radius: 8px;
+            background-color: #F8F9FA; /* Fondo muy claro para las filas de conteo */
+            border-left: 4px solid #378398; /* Acento visual azul */
+        }
+        .counter-label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 16px;
+        }
+        .counter {
+            font-size: 22px;
+            color: #1d8d9f;
+            font-weight: 700;
+        }
+    </style>
 </head>
 <body>
 
-<h1>FXI CORTE Y COSTURA</h1>
+<h1>COMFORT GRAND</h1>
 
-<!-- Animación de carga inicial -->
-<div id="loadingOverlay" class="loading-overlay">
-  <div class="spinner"></div>
-  <div>Cargando totales...</div>
+<div class="metrics-grid">
+    <div class="metric-card">
+        <div class="label">Meta (Rate)</div>
+        <div class="value" id="rate">---</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Piezas Buenas</div>
+        <div class="value" id="goodCount">0</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Eficiencia Actual</div>
+        <div class="value" id="efficiency">0%</div>
+    </div>
 </div>
 
-<div class="totales-container" id="totalesContainer">
-  <!-- Las cajas se crearán dinámicamente cuando lleguen los datos -->
+<div class="progress-container">
+    <div id="progressFill" class="progress-fill"></div>
+</div>
+<div class="progress-label" id="progressMetaText">
+    Avance vs meta (cargando...)
+</div>
+
+<div class="detail-container">
+    <h2>Total Producido: <span id="total9">0</span></h2>
+    <div class="counter-card"><div class="counter-label">OP13A </div><div class="counter" id="op13a_9">0</div></div>
+    <div class="counter-card"><div class="counter-label">OP13B </div><div class="counter" id="op13b_9">0</div></div>
+    <div class="counter-card"><div class="counter-label">OP13C </div><div class="counter" id="op13c_9">0</div></div>
 </div>
 
 <script>
-  const urls = {
-    engage: "https://script.google.com/macros/s/AKfycbwwFCtFayqkCKe2_P5Qxa9py_xA5pn2ifF2FRKMD_SP3CN6s6oDv0t2lwdTa_AgCMQanQ/exec",
-    comfort: "https://script.google.com/macros/s/AKfycbwY5pS2dXJ90vdyDfRxf8k1HZ_u8m9kYt0mBpRVfllo6PnkzPPRGIPXvGDrIhI57S4a/exec",
-    costco: "https://script.google.com/macros/s/AKfycbyk2nozKZmI05nnCpQjhJ46i1I0EQNXqQPS85tKMhvUXfS3Ef1xDUqcOxMoScoVtslB/exec"
-  };
+    // **NOTA:** El código JavaScript se mantiene EXACTAMENTE igual para preservar la funcionalidad.
 
-  async function obtenerTotales() {
-    try {
-      const [resEngage, resComfort, resCostco] = await Promise.all([
-        fetch(urls.engage).then(r => r.json()),
-        fetch(urls.comfort).then(r => r.json()),
-        fetch(urls.costco).then(r => r.json())
-      ]);
+    // API de producción
+    const url = "https://script.google.com/macros/s/AKfycbwY5pS2dXJ90vdyDfRxf8k1HZ_u8m9kYt0mBpRVfllo6PnkzPPRGIPXvGDrIhI57S4a/exec";
 
-      const totalEngage = parseInt(resEngage.total || 0);
-      const totalComfort = parseInt(resComfort.celda5.op13a.total || 0)
-                        + parseInt(resComfort.celda5.op13b.total || 0)
-                        + parseInt(resComfort.celda5.op13c.total || 0)
-                        + parseInt(resComfort.celda9.op13a.total || 0)
-                        + parseInt(resComfort.celda9.op13b.total || 0)
-                        + parseInt(resComfort.celda9.op13c.total || 0);
-      const totalCostco = parseInt(resCostco.CELDA1.total6.total || 0)
-                        + parseInt(resCostco.CELDA2.total6.total || 0)
-                        + parseInt(resCostco.CELDA13.total6.total || 0)
-                        + parseInt(resCostco.CELDA14.total6.total || 0);
+    // 🟢 API de metas desde Google Sheets
+    const metasUrl = "https://script.google.com/macros/s/AKfycbyEXGaVrVWo6ppY-vdeEu33wZrq7Fq2xW75FRF9xGASRq2nrYEaSR93evV9ym6g-K8h/exec";
 
-      return {
-        "COMFORT GRANDE CELDA 8": totalEngage,
-        "COMFORT GRANDE CELDA 5 Y 9": totalComfort,
-        "COSTCO 8\"": totalCostco
-      };
-    } catch (error) {
-      console.error("Error al obtener los datos:", error);
-      return {};
+    // Meta dinámica con fallback
+    let rate9 = 324;
+    let metaCargada = false;
+
+    async function cargarMeta() {
+        try {
+            const r = await fetch(metasUrl);
+            const metaData = await r.json();
+            let nuevaMeta = null;
+
+            if (metaData.celda9 && metaData.celda9.meta != null) {
+                nuevaMeta = metaData.celda9.meta;
+            } else if (metaData.meta != null) {
+                nuevaMeta = metaData.meta;
+            }
+
+            if (nuevaMeta != null) rate9 = Number(nuevaMeta);
+
+        } catch (e) {
+            console.log("Error al cargar meta, usando fallback:", e);
+        }
+
+        metaCargada = true;
+        document.getElementById("rate").textContent = rate9;
+        document.getElementById("progressMetaText").textContent =
+            "Avance vs meta (" + rate9 + " pzas)";
     }
-  }
 
-  function renderizarCajas(totales) {
-    const container = document.getElementById("totalesContainer");
-    container.innerHTML = ""; // Limpiar antes
+    async function actualizar() {
+        try {
+            const r = await fetch(url);
+            const d = await r.json();
 
-    for (const [linea, total] of Object.entries(totales)) {
-      const caja = document.createElement("div");
-      caja.className = "caja";
-      caja.innerHTML = `<div class="nombre-linea">${linea}</div>
-                        <div class="total">${total}</div>`;
+            document.getElementById("op13a_9").textContent = d.celda9.op13a.total;
+            document.getElementById("op13b_9").textContent = d.celda9.op13b.total;
+            document.getElementById("op13c_9").textContent = d.celda9.op13c.total;
 
-      caja.addEventListener("click", () => {
-        let urlDashboard = "";
-        if(linea === "MOLECULE ENGAGE PRO") urlDashboard = "MOLECULE ENGAGE PRO.html";
-        if(linea === "COMFORT GRANDE") urlDashboard = "COMFORT GRANDE V-201.html";
-        if(linea === "COSTCO 8\"") urlDashboard = "COSTCO 8.html";
-        window.open(urlDashboard, "_blank");
-      });
+            const total9 = d.celda9.op13a.total + d.celda9.op13b.total + d.celda9.op13c.total;
+            document.getElementById("total9").textContent = total9;
+            document.getElementById("goodCount").textContent = total9;
 
-      container.appendChild(caja);
+            const eff = (total9 / rate9) * 100;
+            document.getElementById("efficiency").textContent = eff.toFixed(1) + "%";
+
+            const fill = document.getElementById("progressFill");
+            fill.style.width = Math.min(eff, 120) + "%";
+
+            // Los colores de alerta (rojo, amarillo, verde) se mantienen, pero con un mejor contraste
+            if (eff < 80) fill.style.backgroundColor = "#E74C3C"; // Rojo
+            else if (eff < 95) fill.style.backgroundColor = "#F1C40F"; // Amarillo
+            else fill.style.backgroundColor = "#2ECC71"; // Verde
+
+        } catch (err) {
+            console.log("Error al actualizar:", err);
+        }
     }
-  }
 
-  async function init() {
-    const loadingOverlay = document.getElementById("loadingOverlay");
-    const totales = await obtenerTotales();
-    
-    // Ocultar overlay de carga y mostrar contenedor
-    loadingOverlay.style.display = "none";
-    const container = document.getElementById("totalesContainer");
-    container.style.opacity = 1;
-
-    renderizarCajas(totales);
-
-    // Actualizar cada 5 segundos
-    setInterval(async () => {
-      const nuevosTotales = await obtenerTotales();
-      renderizarCajas(nuevosTotales);
-    }, 5000);
-  }
-
-  init();
+    // 🔄 Cargar meta una vez y luego actualizar producción
+    cargarMeta();
+    setInterval(actualizar, 5000);
+    actualizar();
 </script>
 
 </body>
