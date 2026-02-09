@@ -1,0 +1,237 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>CUT AND SEW</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* 🎨 Estilos Generales */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F8F9FA;
+            color: #343A40;
+            text-align: center;
+            padding: 25px;
+        }
+
+        h1 {
+            color: #22698d;
+            margin-bottom: 25px;
+            font-size: 2.2em;
+            letter-spacing: 0.5px;
+        }
+
+        /* ✅ LOGO FXI – SIN FONDO */
+        .logo-top-right{
+            position: fixed;
+            top: 14px;
+            right: 14px;
+            z-index: 9999;
+            padding: 0;           /* sin caja */
+        }
+        .logo-top-right img{
+            height: 110px;        /* 🔥 LOGO GRANDE */
+            width: auto;
+            display: block;
+        }
+
+        /* 📊 Métricas */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto 20px auto;
+        }
+
+        .metric-card {
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+            border-top: 3px solid #17A2B8;
+        }
+
+        .label {
+            font-size: 15px;
+            font-weight: 500;
+            color: #6C757D;
+        }
+
+        .value {
+            font-size: 32px;
+            color: #17A2B8;
+            font-weight: bold;
+        }
+
+        /* 🔥 Barra de Progreso */
+        .progress-container {
+            margin: 40px auto 10px auto;
+            width: 90%;
+            height: 38px;
+            background-color: #E9ECEF;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.6s ease;
+            border-radius: 20px;
+        }
+
+        .progress-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        /* 🔹 Detalle */
+        .detail-container {
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 400px;
+            margin: 40px auto;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        }
+
+        .detail-container h2 {
+            color: #16849d;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #17A2B8;
+            padding-bottom: 8px;
+        }
+
+        .counter-card {
+            display: flex;
+            justify-content: space-between;
+            background: #F8F9FA;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 8px 0;
+            border-left: 4px solid #378398;
+        }
+
+        .counter {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1d8d9f;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ✅ LOGO FXI SIN FONDO -->
+<div class="logo-top-right">
+    <img 
+      src="https://images.squarespace-cdn.com/content/v1/620ed8b50c43390f3c3413d1/a1c81e4e-aba8-48b0-adcd-9600d43276da/main_logo_color_footer.png?format=300w"
+      alt="FXI Logo"
+      referrerpolicy="no-referrer"
+    >
+</div>
+
+<h1>CUT & SEW</h1>
+
+<!-- 🔹 Línea / Modelo / Turno -->
+<div class="metrics-grid">
+    <div class="metric-card">
+        <div class="label">Línea</div>
+        <div class="value" id="linea">---</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Modelo</div>
+        <div class="value" id="modelo">---</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Turno</div>
+        <div class="value" id="turno">---</div>
+    </div>
+</div>
+
+<!-- 🔹 Métricas -->
+<div class="metrics-grid">
+    <div class="metric-card">
+        <div class="label">Meta</div>
+        <div class="value" id="rate">---</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Piezas Buenas</div>
+        <div class="value" id="goodCount">0</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Eficiencia</div>
+        <div class="value" id="efficiency">0%</div>
+    </div>
+</div>
+
+<div class="progress-container">
+    <div id="progressFill" class="progress-fill"></div>
+</div>
+<div class="progress-label" id="progressMetaText">Avance</div>
+
+<!-- 🔹 Detalle -->
+<div class="detail-container">
+    <h2>Total Producido: <span id="total9">0</span></h2>
+    <div class="counter-card"><span>OP13A</span><span class="counter" id="op13a_9">0</span></div>
+    <div class="counter-card"><span>OP13B</span><span class="counter" id="op13b_9">0</span></div>
+    <div class="counter-card"><span>OP13C</span><span class="counter" id="op13c_9">0</span></div>
+</div>
+
+<script>
+    const url = "https://script.google.com/macros/s/AKfycbyb8tpcW9Z_SsUnBYI13klmF-0MHfFYSbUYBQSohLX2vobA7ikL97kFmfN6cg-gTEP3/exec";
+    const metasUrl = "https://script.google.com/macros/s/AKfycbzzIYAzlq5NNhSHoqR20RFhwWXaQMksd9LkkVZJRipBv6bgOJ7iuN0Faqld72lLuM2LZg/exec";
+
+    let rate9 = 324;
+
+    async function cargarMeta(){
+        try{
+            const r = await fetch(metasUrl);
+            const d = await r.json();
+            if(d.celda9){
+                rate9 = Number(d.celda9.meta);
+                linea.textContent = d.celda9.linea;
+                modelo.textContent = d.celda9.modelo;
+                turno.textContent = d.celda9.turno;
+            }
+            rate.textContent = rate9;
+        }catch(e){ console.log(e); }
+    }
+
+    async function actualizar(){
+        try{
+            const r = await fetch(url);
+            const d = await r.json();
+
+            const a = d.celda9.op13a.total;
+            const b = d.celda9.op13b.total;
+            const c = d.celda9.op13c.total;
+
+            op13a_9.textContent = a;
+            op13b_9.textContent = b;
+            op13c_9.textContent = c;
+
+            const total = a + b + c;
+            total9.textContent = total;
+            goodCount.textContent = total;
+
+            const eff = (total / rate9) * 100;
+            efficiency.textContent = eff.toFixed(1) + "%";
+
+            progressFill.style.width = Math.min(eff, 120) + "%";
+            progressFill.style.background =
+                eff < 80 ? "#E74C3C" : eff < 95 ? "#F1C40F" : "#2ECC71";
+
+        }catch(e){ console.log(e); }
+    }
+
+    cargarMeta();
+    actualizar();
+    setInterval(actualizar, 1000);
+</script>
+
+</body>
+</html>
